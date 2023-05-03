@@ -93,5 +93,48 @@
         </plugins>
     </build>
 
+    <!-- To add multiple builds for Jenkins -->
+    <profiles>
+        <!-- Smoke Test Profile-->
+        <profile>
+            <id>smoke_profile</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <includes>
+                                <!-- To show Jenkins which class we want to run -->
+                                <include>**/_04_RunnerForGroups.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Regression Profile -->
+        <profile>
+            <id>regression_profile</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <configuration>
+                            <includes>
+                                <!-- To show Jenkins which class we want to run -->
+                                <include>**/_04_RunnerForGroups.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 
 </project>
