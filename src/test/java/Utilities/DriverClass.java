@@ -12,15 +12,15 @@ public class DriverClass {
     private static ThreadLocal<WebDriver> threadDriver = new ThreadLocal<>();
     private static ThreadLocal<String> threadDriverName = new ThreadLocal<>();
 
-    public static WebDriver getDriver(){
+    public static WebDriver getDriver() {
 
-        if (threadDriver.get() == null){
+        if (threadDriver.get() == null) {
 
-            if (threadDriverName.get() == null){
+            if (threadDriverName.get() == null) {
                 threadDriverName.set("chrome");
             }
 
-            switch (threadDriverName.get()){
+            switch (threadDriverName.get()) {
                 case "firefox":
                     threadDriver.set(new FirefoxDriver());
                     break;
@@ -33,7 +33,9 @@ public class DriverClass {
                 default:
                     ChromeOptions options = new ChromeOptions();
                     options.addArguments("--remote-allow-origins=*"); // To solve the error with Chrome version v111
-                    options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1400,2400");
+                    if (!runningFromIntelliJ()) {
+                        options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1400,2400");
+                    }
                     threadDriver.set(new ChromeDriver(options));
                     break;
             }
@@ -41,20 +43,25 @@ public class DriverClass {
         return threadDriver.get();
     }
 
-    public static void quitDriver(){
+    public static boolean runningFromIntelliJ() {
+        String classPath = System.getProperty("java.class.path");
+        return classPath.contains("idea_rt.jar");
+    }
+
+    public static void quitDriver() {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        if (threadDriver.get() != null){
+        if (threadDriver.get() != null) {
             threadDriver.get().quit();
             WebDriver driver = null;
             threadDriver.set(driver);
         }
     }
 
-    public static void setThreadDriverName(String browserName){
+    public static void setThreadDriverName(String browserName) {
         threadDriverName.set(browserName);
     }
 }
